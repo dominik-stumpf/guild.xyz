@@ -20,7 +20,7 @@ type Props = {
 
 export function BlankGuildCard({ guildData }: Props) {
   return (
-    <DisplayCard>
+    <DisplayCard bg="whiteAlpha.200">
       <SimpleGrid
         templateColumns={"3rem calc(100% - 5.25rem)"}
         gap={4}
