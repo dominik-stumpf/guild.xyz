@@ -5,23 +5,13 @@ import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import { BlankGuildCard } from "./BlankGuildCard"
+import { shuffleArray } from "utils/shuffleArray"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
 }
 
 const GUILD_COUNT = 4
-
-function shuffleArray<T>(arr: T[]): T[] {
-  const shuffledArray = [...arr]
-  for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const temp = shuffledArray[i]
-    shuffledArray[i] = shuffledArray[j]
-    shuffledArray[j] = temp
-  }
-  return shuffledArray
-}
 
 export function PairLogosToGuilds() {
   const {
@@ -30,10 +20,11 @@ export function PairLogosToGuilds() {
     isLoading,
   } = useSWR<GuildBase[]>("/api/user", getGuilds)
   const [pairings, setPairings] = useState<undefined | [number, number][]>()
-
   const shuffledIndices = useMemo(() => {
     return shuffleArray(Array.from({ length: GUILD_COUNT }, (_, i) => i))
   }, [])
+  const guildsWithoutImage =
+    guilds && guilds.map((guild) => ({ ...guild, imageUrl: undefined }))
 
   return (
     <Card py="6" px={{ base: 5, md: 6 }} width={400}>
@@ -50,14 +41,16 @@ export function PairLogosToGuilds() {
         </Heading>
         <Flex gap={2} wrap="wrap" my={8}>
           {!error &&
-            !isLoading &&
             shuffledIndices.map((_, i) => (
-              <GuildLogo imageUrl={guilds[i].imageUrl} />
+              <GuildLogo
+                imageUrl={isLoading ? undefined : guilds[i].imageUrl}
+                priority
+              />
             ))}
         </Flex>
         {!error && isLoading
           ? "loading guilds"
-          : guilds.map((guild) => <BlankGuildCard guildData={guild} />)}
+          : guildsWithoutImage.map((guild) => <BlankGuildCard guildData={guild} />)}
         <Button
           type="button"
           colorScheme="green"

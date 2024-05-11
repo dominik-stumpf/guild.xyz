@@ -2,13 +2,15 @@ import { Button, Center, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
 }
+
+const GUILD_COUNT = 4
 
 export function GuessGuildByLogo() {
   const {
@@ -17,6 +19,8 @@ export function GuessGuildByLogo() {
     isLoading,
   } = useSWR<GuildBase[]>("/api/user", getGuilds)
   const [selectedGuild, setSelectedGuild] = useState<undefined | string>()
+
+  const randomGuildIndex = useMemo(() => Math.floor(GUILD_COUNT * Math.random()), [])
 
   return (
     <Card py="6" px={{ base: 5, md: 6 }} width={400}>
@@ -32,7 +36,13 @@ export function GuessGuildByLogo() {
           Which guild uses this logo?
         </Heading>
         <Center my={8}>
-          <GuildLogo size={24} />
+          {!error && (
+            <GuildLogo
+              size={24}
+              imageUrl={isLoading ? undefined : guilds[randomGuildIndex].imageUrl}
+              priority
+            />
+          )}
         </Center>
         {!error && isLoading ? (
           "loading guilds"

@@ -26,7 +26,14 @@ export function BlankGuildCard({ guildData }: Props) {
         gap={4}
         alignItems="center"
       >
-        <GuildLogo border="2px dashed rgba(255,255,255,0.5)" />
+        <GuildLogo
+          position="relative"
+          padding="4px"
+          border="2px dashed"
+          borderColor="whiteAlpha.500"
+          backgroundClip="padding-box"
+          imageUrl={guildData.imageUrl}
+        />
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="0.5" mt="-1">
           <HStack spacing={1}>
             <Text
