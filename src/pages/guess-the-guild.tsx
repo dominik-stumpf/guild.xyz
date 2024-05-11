@@ -1,7 +1,9 @@
 import { Center, Text } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import Layout from "components/common/Layout"
+import { GameMenu } from "components/guess-the-guild/GameMenu"
 import { GuessGuildByLogo } from "components/guess-the-guild/GuessGuildByLogo"
+import { PairLogosToGuilds } from "components/guess-the-guild/PairLogosToGuilds"
 import { ReactNode, useState } from "react"
 
 function GuessTheGuild() {
@@ -29,7 +31,9 @@ function GuessTheGuild() {
         Record &ndash; {score}
       </Text>
       <Center>
+        <GameMenu />
         <GuessGuildByLogo />
+        <PairLogosToGuilds />
       </Center>
     </>
   )
