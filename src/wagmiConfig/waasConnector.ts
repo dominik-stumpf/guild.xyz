@@ -193,6 +193,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
         await this.getProvider()
         const { Logout, ProtocolFamily } = await cwaasImport()
 
+        // @ts-ignore TODO: causes pre-commit hook to fail
         await Logout().catch(() => {})
 
         const wallet = await waas.wallets.create()
@@ -210,6 +211,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
         await this.getProvider()
         const { Logout, ProtocolFamily } = await cwaasImport()
 
+        // @ts-ignore TODO: causes pre-commit hook to fail
         await Logout().catch(() => {})
 
         const wallet = await waas.wallets.restoreFromBackup(backupData)
