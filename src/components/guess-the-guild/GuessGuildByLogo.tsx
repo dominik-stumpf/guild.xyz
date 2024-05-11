@@ -19,7 +19,7 @@ export function GuessGuildByLogo() {
   const [selectedGuild, setSelectedGuild] = useState<undefined | string>()
 
   return (
-    <Card py="6" px={{ base: 5, md: 6 }} pos="relative" width={400}>
+    <Card py="6" px={{ base: 5, md: 6 }} width={400}>
       <VStack>
         <Heading
           as="h1"
@@ -28,11 +28,8 @@ export function GuessGuildByLogo() {
           fontWeight="bold"
           letterSpacing="wide"
           textAlign="center"
-          maxW="full"
-          noOfLines={1}
-          wordBreak="break-all"
         >
-          Guess the guild
+          Which guild uses this logo?
         </Heading>
         <Center my={8}>
           <GuildLogo size={24} />
@@ -40,8 +37,6 @@ export function GuessGuildByLogo() {
         {!error && isLoading ? (
           "loading guilds"
         ) : (
-          // guilds.map((guild) => <GuildCard guildData={guild} key={guild.id} />)
-          // guilds.map((guild) => <DisplayCard textAlign={'center'}>{guild.name}</DisplayCard>)
           <RadioButtonGroup
             chakraStyles={{
               orientation: "vertical",

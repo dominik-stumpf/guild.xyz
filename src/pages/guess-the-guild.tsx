@@ -1,23 +1,52 @@
-import { Center } from "@chakra-ui/react"
+import { Center, Text } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import Layout from "components/common/Layout"
 import { GuessGuildByLogo } from "components/guess-the-guild/GuessGuildByLogo"
+import { ReactNode, useState } from "react"
 
 function GuessTheGuild() {
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const [score, setScore] = useState(0)
+  const { textColor } = useThemeContext()
 
   return (
+    <>
+      <Text
+        fontFamily="display"
+        fontWeight="bold"
+        fontSize="6xl"
+        textAlign="center"
+        color={textColor}
+      >
+        {score}
+      </Text>
+      <Text
+        fontFamily="display"
+        mb={16}
+        textAlign="center"
+        color={textColor}
+        whiteSpace="nowrap"
+      >
+        Record &ndash; {score}
+      </Text>
+      <Center>
+        <GuessGuildByLogo />
+      </Center>
+    </>
+  )
+}
+
+function LayoutWrapper({ children }: { children: ReactNode }) {
+  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  return (
     <Layout
-      backgroundOffset={47}
+      backgroundOffset={260}
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       ogTitle="Guess the guild"
       showFooter={false}
     >
-      <Center>
-        <GuessGuildByLogo />
-      </Center>
+      {children}
     </Layout>
   )
 }
@@ -25,7 +54,9 @@ function GuessTheGuild() {
 export default function () {
   return (
     <ThemeProvider>
-      <GuessTheGuild></GuessTheGuild>
+      <LayoutWrapper>
+        <GuessTheGuild />
+      </LayoutWrapper>
     </ThemeProvider>
   )
 }
