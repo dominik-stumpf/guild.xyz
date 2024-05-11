@@ -2,6 +2,7 @@ import { Button, Center, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
+import { useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 
@@ -15,6 +16,7 @@ export function GuessGuildByLogo() {
     error,
     isLoading,
   } = useSWR<GuildBase[]>("/api/user", getGuilds)
+  const [selectedGuild, setSelectedGuild] = useState<undefined | string>()
 
   return (
     <Card py="6" px={{ base: 5, md: 6 }} pos="relative" width={400}>
@@ -48,13 +50,26 @@ export function GuessGuildByLogo() {
               spacing: 2,
               width: "100%",
             }}
-            options={guilds.map((guild, i) => ({
+            onChange={(value) => {
+              setSelectedGuild(value)
+            }}
+            value={selectedGuild}
+            options={guilds.map((guild) => ({
               label: guild.name,
-              value: `Option ${i + 1}`,
+              value: guild.name,
             }))}
           />
         )}
-        <Button type="button" colorScheme="green" isDisabled mt={4} w={"100%"}>
+        <Button
+          type="button"
+          colorScheme="green"
+          isDisabled={selectedGuild === undefined}
+          mt={4}
+          w={"100%"}
+          onClick={() => {
+            console.log("submitting", selectedGuild)
+          }}
+        >
           Place bet
         </Button>
       </VStack>
