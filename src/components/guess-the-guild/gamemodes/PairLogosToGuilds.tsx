@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import { shuffleArray } from "utils/shuffleArray"
-import { BlankGuildCard } from "./BlankGuildCard"
+import { BlankGuildCard } from "../BlankGuildCard"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
@@ -61,7 +61,6 @@ export function PairLogosToGuilds() {
           prev[collisionIndex] = prev[blankGuessIndex]
         }
         prev[blankGuessIndex] = guessIndex
-        console.log(prev)
         return prev
       })
     }
