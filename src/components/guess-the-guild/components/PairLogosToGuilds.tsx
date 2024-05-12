@@ -1,13 +1,13 @@
 import { Button, Flex, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
+import { GameDriver } from "pages/guess-the-guild"
 import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
-import { shuffleArray } from "utils/shuffleArray"
-import { BlankGuildCard } from "../components/BlankGuildCard"
 import { checkIsAscending } from "utils/checkIsAscending"
-import { GameDriver } from "pages/guess-the-guild"
+import { shuffleArray } from "utils/shuffleArray"
+import { BlankGuildCard } from "./BlankGuildCard"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()

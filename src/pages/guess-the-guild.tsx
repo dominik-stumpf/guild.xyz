@@ -2,16 +2,16 @@ import { Center } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import Layout from "components/common/Layout"
 import { GameMenu } from "components/guess-the-guild/components/GameMenu"
+import { GuessGuildByLogo } from "components/guess-the-guild/components/GuessGuildByLogo"
+import { PairLogosToGuilds } from "components/guess-the-guild/components/PairLogosToGuilds"
 import { ScoreCounter } from "components/guess-the-guild/components/ScoreCounter"
-import { GuessGuildByLogo } from "components/guess-the-guild/game-modes/GuessGuildByLogo"
-import { PairLogosToGuilds } from "components/guess-the-guild/game-modes/PairLogosToGuilds"
 import {
   Dispatch,
+  FunctionComponent,
   ReactNode,
   SetStateAction,
   useEffect,
   useState,
-  FunctionComponent,
 } from "react"
 
 export type RoundState = "start" | "fail" | "pass"
