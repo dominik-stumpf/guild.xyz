@@ -38,6 +38,7 @@ export function GuessGuildByLogo() {
         <Center my={8}>
           {!error && (
             <GuildLogo
+              userSelect="none"
               size={24}
               imageUrl={isLoading ? undefined : guilds[randomGuildIndex].imageUrl}
               priority

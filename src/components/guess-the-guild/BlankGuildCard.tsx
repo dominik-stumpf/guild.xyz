@@ -13,14 +13,16 @@ import GuildLogo from "components/common/GuildLogo"
 import { Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
+import { PropsWithoutRef } from "react"
+import { Rest } from "types"
 
-type Props = {
+interface Props extends PropsWithoutRef<Rest> {
   guildData: GuildBase
 }
 
-export function BlankGuildCard({ guildData }: Props) {
+export function BlankGuildCard({ guildData, ...rest }: Props) {
   return (
-    <DisplayCard bg="whiteAlpha.200">
+    <DisplayCard bg="whiteAlpha.200" {...rest}>
       <SimpleGrid
         templateColumns={"3rem calc(100% - 5.25rem)"}
         gap={4}
