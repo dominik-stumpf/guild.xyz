@@ -7,6 +7,7 @@ import { GuildBase } from "types"
 import { shuffleArray } from "utils/shuffleArray"
 import { BlankGuildCard } from "../components/BlankGuildCard"
 import { checkIsAscending } from "utils/checkIsAscending"
+import { GameDriver } from "pages/guess-the-guild"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
@@ -27,7 +28,7 @@ function highlightActiveButton(
   return result
 }
 
-export function PairLogosToGuilds() {
+export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
   const {
     data: guilds,
     error,
@@ -115,7 +116,7 @@ export function PairLogosToGuilds() {
           w={"100%"}
           onClick={() => {
             const isValid = checkIsAscending(pairings)
-            console.log({ isValid })
+            setRoundState(isValid ? "pass" : "fail")
             // setPairings(ASCENDING_INDICES)
           }}
         >

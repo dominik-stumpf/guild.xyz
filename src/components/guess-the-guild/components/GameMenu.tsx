@@ -1,12 +1,15 @@
 import { Button, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
+import { DIFFICULTIES, Difficulty } from "pages/guess-the-guild"
 
-const DIFFICULTIES = ["easy", "medium", "hard"] as const
+interface Props {
+  setDifficulty: Dispatch<SetStateAction<Difficulty>>
+}
 
-export function GameMenu() {
-  const [difficulty, setDifficulty] = useState<string>()
+export function GameMenu({ setDifficulty }: Props) {
+  const [activeDifficulty, setActiveDifficulty] = useState<Difficulty>("medium")
 
   return (
     <Card py="6" px={{ base: 5, md: 6 }} width={400}>
@@ -32,9 +35,10 @@ export function GameMenu() {
             textTransform: "capitalize",
           }}
           onChange={(value) => {
-            setDifficulty(value)
+            setActiveDifficulty(value as Difficulty)
           }}
-          value={difficulty}
+          value={activeDifficulty}
+          defaultValue={activeDifficulty}
           options={DIFFICULTIES.map((guild) => ({
             label: guild,
             value: guild,
@@ -43,11 +47,11 @@ export function GameMenu() {
         <Button
           type="button"
           colorScheme="green"
-          isDisabled={difficulty === undefined}
+          isDisabled={activeDifficulty === undefined}
           mt={4}
           w={"100%"}
           onClick={() => {
-            console.log("submitting", difficulty)
+            setDifficulty(activeDifficulty)
           }}
         >
           Start game

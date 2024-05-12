@@ -2,6 +2,7 @@ import { Button, Center, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
+import { GameDriver } from "pages/guess-the-guild"
 import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -12,7 +13,7 @@ async function getGuilds() {
 
 const GUILD_COUNT = 4
 
-export function GuessGuildByLogo() {
+export const GuessGuildByLogo: GameDriver = ({ setRoundState }) => {
   const {
     data: guilds,
     error,
@@ -74,7 +75,7 @@ export function GuessGuildByLogo() {
           w={"100%"}
           onClick={() => {
             const isValid = selectedGuild === guilds[randomGuildIndex].id.toString()
-            console.log({ isValid })
+            setRoundState(isValid ? "pass" : "fail")
           }}
         >
           Place bet
