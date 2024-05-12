@@ -62,7 +62,7 @@ export function GuessGuildByLogo() {
             value={selectedGuild}
             options={guilds.map((guild) => ({
               label: guild.name,
-              value: guild.name,
+              value: guild.id.toString(),
             }))}
           />
         )}
@@ -73,7 +73,8 @@ export function GuessGuildByLogo() {
           mt={4}
           w={"100%"}
           onClick={() => {
-            console.log("submitting", selectedGuild)
+            const isValid = selectedGuild === guilds[randomGuildIndex].id.toString()
+            console.log({ isValid })
           }}
         >
           Place bet

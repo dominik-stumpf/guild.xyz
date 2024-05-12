@@ -6,12 +6,14 @@ import useSWR from "swr"
 import { GuildBase } from "types"
 import { shuffleArray } from "utils/shuffleArray"
 import { BlankGuildCard } from "../components/BlankGuildCard"
+import { checkIsAscending } from "utils/checkIsAscending"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
 }
 
 const GUILD_COUNT = 4
+const ASCENDING_INDICES = Array.from({ length: GUILD_COUNT }, (_, i) => i)
 
 function highlightActiveButton(
   index: number,
@@ -34,10 +36,7 @@ export function PairLogosToGuilds() {
   const [pairings, setPairings] = useState<(number | null)[]>(
     Array(GUILD_COUNT).fill(null)
   )
-  const shuffledIndices = useMemo(
-    () => shuffleArray(Array.from({ length: GUILD_COUNT }, (_, i) => i)),
-    []
-  )
+  const shuffledIndices = useMemo(() => shuffleArray(ASCENDING_INDICES), [])
   const guildsWithGuessedImage =
     guilds &&
     guilds.map((guild, i, arr) => {
@@ -81,7 +80,7 @@ export function PairLogosToGuilds() {
         </Heading>
         <Flex gap={2} wrap="wrap" my={8}>
           {!error &&
-            shuffledIndices.map((_, i) => (
+            shuffledIndices.map((i) => (
               <GuildLogo
                 userSelect="none"
                 key={isLoading ? i : guilds[i].id}
@@ -115,7 +114,9 @@ export function PairLogosToGuilds() {
           mt={4}
           w={"100%"}
           onClick={() => {
-            console.log("submitting", pairings)
+            const isValid = checkIsAscending(pairings)
+            console.log({ isValid })
+            // setPairings(ASCENDING_INDICES)
           }}
         >
           Place bet
