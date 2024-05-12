@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import { shuffleArray } from "utils/shuffleArray"
-import { BlankGuildCard } from "../BlankGuildCard"
+import { BlankGuildCard } from "../components/BlankGuildCard"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
