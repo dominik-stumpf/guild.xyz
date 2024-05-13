@@ -3,9 +3,10 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 
 interface Props {
   score: number
+  record: number
 }
 
-export function ScoreCounter({ score }: Props) {
+export function ScoreCounter({ score, record }: Props) {
   const { textColor } = useThemeContext()
 
   return (
@@ -26,7 +27,7 @@ export function ScoreCounter({ score }: Props) {
         color={textColor}
         whiteSpace="nowrap"
       >
-        Record &ndash; {score}
+        Record &ndash; {record}
       </Text>
     </>
   )

@@ -14,7 +14,7 @@ import {
   useState,
 } from "react"
 
-export type RoundState = "start" | "fail" | "pass"
+type RoundState = "start" | "fail" | "pass"
 interface GameDriverProps {
   setRoundState: Dispatch<SetStateAction<RoundState>>
 }
@@ -30,6 +30,18 @@ const GAMEMODES: GameMode[] = [
   { Driver: GuessGuildByLogo, scoreReward: 1 },
   { Driver: PairLogosToGuilds, scoreReward: 2 },
 ]
+const RECORD_KEYNAME = "guess-the-guild-record"
+
+function retrieveLocalStorageRecord() {
+  return parseInt(localStorage.getItem(RECORD_KEYNAME)) || 0
+}
+
+function syncLocalStorageRecord(currentScore: number) {
+  const storageScore = retrieveLocalStorageRecord()
+  if (currentScore > storageScore) {
+    localStorage.setItem(RECORD_KEYNAME, currentScore.toString())
+  }
+}
 
 function getRandomGameModeIndex() {
   return Math.floor(GAMEMODES.length * Math.random())
@@ -42,14 +54,23 @@ function GuessTheGuild() {
     getRandomGameModeIndex()
   )
   const [score, setScore] = useState(0)
+  const [record, setRecord] = useState(0)
   const [roundCount, setRoundCount] = useState(0)
 
   const activeGameMode = GAMEMODES[activeGameModeIndex]
   const { Driver } = activeGameMode
 
   useEffect(() => {
-    console.log("playing in difficulty", difficulty)
-  }, [difficulty])
+    setRecord(retrieveLocalStorageRecord())
+  }, [])
+
+  useEffect(() => {
+    // sync every update to keep localStorage the single source of truth
+    syncLocalStorageRecord(score)
+    if (score > record) {
+      setRecord(score)
+    }
+  }, [score])
 
   useEffect(() => {
     switch (roundState) {
@@ -75,7 +96,7 @@ function GuessTheGuild() {
 
   return (
     <>
-      {difficulty !== null && <ScoreCounter score={score} />}
+      {difficulty !== null && <ScoreCounter score={score} record={record} />}
       <Center>
         {difficulty === null ? (
           <GameMenu setDifficulty={setDifficulty} />
