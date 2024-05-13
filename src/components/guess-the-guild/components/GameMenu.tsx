@@ -2,7 +2,8 @@ import { Button, Heading, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Dispatch, SetStateAction, useState } from "react"
-import { DIFFICULTIES, Difficulty } from "pages/guess-the-guild"
+import { Difficulty } from "pages/guess-the-guild"
+import { DIFFICULTIES } from "../constants"
 
 interface Props {
   setDifficulty: Dispatch<SetStateAction<Difficulty>>

@@ -3,16 +3,10 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { GameDriver } from "pages/guess-the-guild"
 import { useEffect, useMemo, useState } from "react"
-import useSWR from "swr"
-import { GuildBase } from "types"
 import { checkIsAscending } from "utils/checkIsAscending"
 import { shuffleArray } from "utils/shuffleArray"
 import { BlankGuildCard } from "./BlankGuildCard"
 import { GUILD_COUNT } from "../constants"
-
-async function getGuilds() {
-  return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
-}
 
 const ASCENDING_INDICES = Array.from({ length: GUILD_COUNT }, (_, i) => i)
 
@@ -28,12 +22,7 @@ function highlightActiveButton(
   return result
 }
 
-export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
-  const {
-    data: guilds,
-    error,
-    isLoading,
-  } = useSWR<GuildBase[]>("/api/user", getGuilds)
+export const PairLogosToGuilds: GameDriver = ({ setRoundState, guilds }) => {
   const [pairings, setPairings] = useState<(number | null)[]>(
     Array(GUILD_COUNT).fill(null)
   )
@@ -81,40 +70,37 @@ export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
           Pair the logos with the guilds
         </Heading>
         <Flex gap={2} wrap="wrap" my={8}>
-          {!error &&
-            shuffledIndices.map((i) => (
-              <GuildLogo
-                userSelect="none"
-                key={isLoading ? i : guilds[i].id}
-                imageUrl={isLoading ? undefined : guilds[i].imageUrl}
-                onPointerDown={() => {
-                  setGuessIndex(i)
-                }}
-                cursor="pointer"
-                priority
-                pointerEvents={isCorrecting ? "none" : undefined}
-                {...highlightActiveButton(i, guessIndex, blankGuessIndex)}
-              />
-            ))}
-        </Flex>
-        {!error &&
-          !isLoading &&
-          guildsWithGuessedImage.map((guild, i) => (
-            <BlankGuildCard
+          {shuffledIndices.map((i) => (
+            <GuildLogo
               userSelect="none"
-              guildData={guild}
-              key={guild.id}
-              {...highlightActiveButton(i, blankGuessIndex, guessIndex)}
+              key={guilds[i].id}
+              imageUrl={guilds[i].imageUrl}
               onPointerDown={() => {
-                setBlankGuessIndex(i)
+                setGuessIndex(i)
               }}
+              cursor="pointer"
+              priority
               pointerEvents={isCorrecting ? "none" : undefined}
+              {...highlightActiveButton(i, guessIndex, blankGuessIndex)}
             />
           ))}
+        </Flex>
+        {guildsWithGuessedImage.map((guild, i) => (
+          <BlankGuildCard
+            userSelect="none"
+            guildData={guild}
+            key={guild.id}
+            {...highlightActiveButton(i, blankGuessIndex, guessIndex)}
+            onPointerDown={() => {
+              setBlankGuessIndex(i)
+            }}
+            pointerEvents={isCorrecting ? "none" : undefined}
+          />
+        ))}
         <Button
           type="button"
           colorScheme={isCorrecting ? "red" : "green"}
-          isDisabled={isLoading || pairings.some((pairing) => pairing === null)}
+          isDisabled={pairings.some((pairing) => pairing === null)}
           mt={4}
           w={"100%"}
           onClick={() => {
