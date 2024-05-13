@@ -4,9 +4,9 @@ import GuildLogo from "components/common/GuildLogo"
 import { GameDriver } from "pages/guess-the-guild"
 import { useEffect, useMemo, useState } from "react"
 import { checkIsAscending } from "utils/checkIsAscending"
-import { shuffleArray } from "utils/shuffleArray"
 import { BlankGuildCard } from "./BlankGuildCard"
 import { GUILD_COUNT } from "../constants"
+import { shuffle } from "utils/shuffle"
 
 const ASCENDING_INDICES = Array.from({ length: GUILD_COUNT }, (_, i) => i)
 
@@ -26,7 +26,11 @@ export const PairLogosToGuilds: GameDriver = ({ setRoundState, guilds }) => {
   const [pairings, setPairings] = useState<(number | null)[]>(
     Array(GUILD_COUNT).fill(null)
   )
-  const shuffledIndices = useMemo(() => shuffleArray(ASCENDING_INDICES), [])
+  const shuffledIndices = useMemo(() => {
+    const indices = [...ASCENDING_INDICES]
+    shuffle(indices)
+    return indices
+  }, [])
   const guildsWithGuessedImage =
     guilds &&
     guilds.map((guild, i, arr) => {
