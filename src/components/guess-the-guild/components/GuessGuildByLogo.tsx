@@ -3,9 +3,7 @@ import {
   ButtonGroup,
   Center,
   Heading,
-  UseRadioProps,
   VStack,
-  useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -15,41 +13,10 @@ import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import { GUILD_COUNT } from "../constants"
+import { ValidatableRadioButton } from "./ValidatableRadioButton"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
-}
-
-function RadioCard(
-  props: UseRadioProps & {
-    label: string
-    disabled: boolean
-    incorrect: boolean
-    children: string
-  }
-) {
-  const { getInputProps, getRadioProps } = useRadio(props)
-
-  const input = getInputProps()
-  const checkbox = getRadioProps()
-
-  const { label, isChecked, disabled, incorrect } = props
-
-  return (
-    <Button
-      as="label"
-      {...checkbox}
-      cursor="pointer"
-      w="full"
-      colorScheme={isChecked ? "indigo" : "gray"}
-      textDecoration={incorrect && "line-through"}
-      textDecorationThickness="3px"
-      isDisabled={disabled}
-    >
-      <input {...input} disabled={disabled} />
-      {label}
-    </Button>
-  )
 }
 
 export const GuessGuildByLogo: GameDriver = ({ setRoundState }) => {
@@ -103,7 +70,7 @@ export const GuessGuildByLogo: GameDriver = ({ setRoundState }) => {
             {guilds.map((guild) => {
               const radio = getRadioProps({ value: guild.id.toString() })
               return (
-                <RadioCard
+                <ValidatableRadioButton
                   key={guild.id}
                   {...radio}
                   label={guild.name}
@@ -113,7 +80,7 @@ export const GuessGuildByLogo: GameDriver = ({ setRoundState }) => {
                   disabled={isCorrecting}
                 >
                   {guild.id.toString()}
-                </RadioCard>
+                </ValidatableRadioButton>
               )
             })}
           </ButtonGroup>
