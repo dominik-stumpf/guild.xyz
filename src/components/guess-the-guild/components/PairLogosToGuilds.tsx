@@ -8,12 +8,12 @@ import { GuildBase } from "types"
 import { checkIsAscending } from "utils/checkIsAscending"
 import { shuffleArray } from "utils/shuffleArray"
 import { BlankGuildCard } from "./BlankGuildCard"
+import { GUILD_COUNT } from "../constants"
 
 async function getGuilds() {
   return (await fetch("https://api.guild.xyz/v2/guilds?limit=4")).json()
 }
 
-const GUILD_COUNT = 4
 const ASCENDING_INDICES = Array.from({ length: GUILD_COUNT }, (_, i) => i)
 
 function highlightActiveButton(
@@ -48,6 +48,7 @@ export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
     })
   const [guessIndex, setGuessIndex] = useState<number | null>(null)
   const [blankGuessIndex, setBlankGuessIndex] = useState<number | null>(null)
+  const [isCorrecting, setIsCorrecting] = useState(false)
 
   useEffect(() => {
     if (blankGuessIndex !== null && guessIndex !== null) {
@@ -91,6 +92,7 @@ export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
                 }}
                 cursor="pointer"
                 priority
+                pointerEvents={isCorrecting ? "none" : undefined}
                 {...highlightActiveButton(i, guessIndex, blankGuessIndex)}
               />
             ))}
@@ -106,21 +108,31 @@ export const PairLogosToGuilds: GameDriver = ({ setRoundState }) => {
               onPointerDown={() => {
                 setBlankGuessIndex(i)
               }}
+              pointerEvents={isCorrecting ? "none" : undefined}
             />
           ))}
         <Button
           type="button"
-          colorScheme="green"
+          colorScheme={isCorrecting ? "red" : "green"}
           isDisabled={isLoading || pairings.some((pairing) => pairing === null)}
           mt={4}
           w={"100%"}
           onClick={() => {
+            if (isCorrecting) {
+              setRoundState("finish")
+              return
+            }
             const isValid = checkIsAscending(pairings)
-            setRoundState(isValid ? "pass" : "fail")
-            // setPairings(ASCENDING_INDICES)
+            if (isValid) {
+              setRoundState("pass")
+              return
+            }
+            setRoundState("fail")
+            setIsCorrecting(true)
+            setPairings(ASCENDING_INDICES)
           }}
         >
-          Place bet
+          {isCorrecting ? "Next round" : "Place bet"}
         </Button>
       </VStack>
     </Card>

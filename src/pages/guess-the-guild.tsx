@@ -14,7 +14,7 @@ import {
   useState,
 } from "react"
 
-type RoundState = "start" | "fail" | "pass"
+type RoundState = "start" | "fail" | "pass" | "finish"
 interface GameDriverProps {
   setRoundState: Dispatch<SetStateAction<RoundState>>
 }
@@ -76,11 +76,14 @@ function GuessTheGuild() {
     switch (roundState) {
       case "fail": {
         setScore(0)
-        setRoundState("start")
         break
       }
       case "pass": {
         setScore((prev) => prev + activeGameMode.scoreReward)
+        setRoundState("start")
+        break
+      }
+      case "finish": {
         setRoundState("start")
         break
       }
