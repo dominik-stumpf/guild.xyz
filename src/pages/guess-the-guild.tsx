@@ -64,10 +64,10 @@ function getRandomGameModeIndex() {
 }
 
 const GUILD_REQUEST =
-  "https://api.guild.xyz/v2/guilds?limit=1000&offset=0&order=FEATURED"
+  "https://api.guild.xyz/v2/guilds?limit=200&offset=0&order=FEATURED"
 
-async function fetchGuilds() {
-  return (await fetch(GUILD_REQUEST)).json()
+async function fetchGuilds(request: Parameters<typeof fetch>[0]) {
+  return (await fetch(request)).json()
 }
 
 function GuessTheGuild() {
@@ -90,15 +90,15 @@ function GuessTheGuild() {
   const guildPool = useMemo(() => {
     if (guilds) {
       return guilds
-        .slice(0, fetchOffsetLimit)
-        .filter((guild) => guild?.imageUrl?.length > 0)
+        ?.slice(0, fetchOffsetLimit)
+        ?.filter((guild) => guild?.imageUrl?.length > 0)
     }
   }, [difficulty, guilds])
 
   const guildsInRound = useMemo(() => {
     if (guildPool) {
       shuffle(guildPool)
-      return guildPool.slice(0, GUILD_COUNT)
+      return guildPool?.slice(0, GUILD_COUNT)
     }
   }, [guildPool, roundCount])
 
@@ -153,13 +153,14 @@ function GuessTheGuild() {
         {difficulty === null ? (
           <GameMenu setDifficulty={setDifficulty} />
         ) : (
-          isLoading || (
+          isLoading ||
+          (guildsInRound && (
             <Driver
               setRoundState={setRoundState}
               key={roundCount}
               guilds={guildsInRound}
             />
-          )
+          ))
         )}
       </Center>
     </>
